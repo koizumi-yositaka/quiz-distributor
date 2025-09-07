@@ -1,5 +1,5 @@
 import type { UseFormRegister, FieldErrors, RegisterOptions } from "react-hook-form";    
-export type EnumInputComponentType = "radio";
+
 
 export type TPage = {
     pageId: string;
@@ -31,7 +31,7 @@ export type TRadioOption = {
     value: string;
 }
 
-// 設計用の型
+// 設計用の型 lambdaとも共通
 export type TPageDesign = {
     pageId: string;
     components: TInputComponentDesign[];
@@ -49,3 +49,5 @@ export type TInputContentDesign = {
     options: TRadioOption[];
     requiredMessage: string;
 }
+
+export type EnumInputComponentType = "radio";

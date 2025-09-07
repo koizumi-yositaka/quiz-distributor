@@ -5,82 +5,13 @@ import type { TPage, TPageDesign } from "../types/componentType";
 import { useState, useEffect } from "react";
 import { parsePageDesign } from "../common/parseCommon";
 import { Complete } from "../components/layout/Complete";
-const initialPages: TPageDesign[] = [
-  {
-    pageId: "1",
-    components: [
-      {
-        id: "1",
-        type: "radio",
-        answer: "test1",
-        content: {
-          q: "test",
-          qIndex: 1,
-          name: "tesAAAA",
-          options: [
-            { id: "1", label: "test1", value: "test1" },
-            { id: "2", label: "test2", value: "test2" },
-            { id: "3", label: "test3", value: "test3" },
-          ],
-          requiredMessage: "この項目は必須です",
-        },
-      },
-      {
-        id: "2",
-        type: "radio",
-        answer: "test2",
-        content: {
-          q: "test",
-          qIndex: 2,
-          name: "testBBBB",
-          options: [
-            { id: "1", label: "test1", value: "test1" },
-            { id: "2", label: "test2", value: "test2" },
-            { id: "3", label: "test3", value: "test3" },
-          ],
-          requiredMessage: "この項目は必須です",
-        },
-      },
-    ],
-  },
-  {
-    pageId: "4",
-    components: [
-      {
-        id: "1",
-        type: "radio",
-        answer: "test3",
-        content: {
-          q: "test",
-          qIndex: 3,
-          name: "tesAAAAVVVAA",
-          options: [
-            { id: "1", label: "test1", value: "test1" },
-            { id: "2", label: "test2", value: "test2" },
-            { id: "3", label: "test3", value: "test3" },
-          ],
-          requiredMessage: "",
-        },
-      },
-      {
-        id: "5",
-        type: "radio",
-        answer: "test4",
-        content: {
-          q: "test",
-          qIndex: 4,
-          name: "testRRRRBBBB",
-          options: [
-            { id: "1", label: "test1", value: "test1" },
-            { id: "2", label: "test2", value: "test2" },
-            { id: "3", label: "test3", value: "test3" },
-          ],
-          requiredMessage: "この項目は必須です",
-        },
-      },
-    ],
-  },
-];
+import {
+  quizApi,
+  type TAnswerQuiz,
+  type TQuizResult,
+} from "../api/quiz/quizApi";
+
+const initialPages: TPageDesign[] = [];
 export const Test = () => {
   const {
     register,
@@ -89,17 +20,16 @@ export const Test = () => {
   } = useForm({
     mode: "onChange",
   });
-  const onSubmit = (data: Record<string, string | undefined>) => {
-    console.log(data);
-    setIsComplete(true);
-  };
-
   const [pagesDesign, setPagesDesign] = useState(
     JSON.stringify(initialPages, null, 2)
   );
   const [pages, setPages] = useState<TPage[]>([]);
   const [parseError, setParseError] = useState("");
-  const [isComplete, setIsComplete] = useState(false);
+  const [quizResult, setQuizResult] = useState<TQuizResult | null>(null);
+
+  // quizId
+  const [quizId, setQuizId] = useState("");
+  const [email, setEmail] = useState("yositaka.koizumi@escco.co.jp");
 
   // registerとerrorsが変更されたときにpagesを更新
   useEffect(() => {
@@ -122,12 +52,46 @@ export const Test = () => {
   ) => {
     setPagesDesign(e.target.value);
   };
+
+  const handleGetQuiz = async () => {
+    const quiz = await quizApi.getQuiz(quizId, email);
+    setQuizResult(null);
+    setPagesDesign(JSON.stringify(quiz, null, 2));
+  };
+  const onSubmit = async (data: Record<string, string>) => {
+    console.log(data);
+    const answerQuiz: TAnswerQuiz = {
+      answeredUserId: email,
+      quizId: quizId,
+      answer: data,
+    };
+    const result = await quizApi.answerQuiz(answerQuiz);
+    setQuizResult(result);
+  };
   return (
     <div className="flex h-screen">
       {/* 左側 */}
       <div className="w-1/2 border  p-4">
+        <input
+          type="text"
+          value={quizId}
+          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setQuizId(e.target.value)}
+        />
+        <input
+          type="text"
+          value={email}
+          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button
+          onClick={handleGetQuiz}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          取得
+        </button>
         <textarea
-          className={`w-full h-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+          className={`w-full h-[400px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 `}
           value={pagesDesign}
           onChange={handlePagesDesignChange}
         />
@@ -137,8 +101,8 @@ export const Test = () => {
       <div className="w-1/2 border  p-4">
         {parseError ? (
           <p className="text-red-500">{parseError}</p>
-        ) : isComplete ? (
-          <Complete />
+        ) : quizResult ? (
+          <Complete result={quizResult} />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="h-full">
             <PageParser
