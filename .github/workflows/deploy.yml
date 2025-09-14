@@ -4,15 +4,14 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      S3_BUCKET: "react-distribute-bucket-ky-cloudfront-bucket-quiz-distributor"
     permissions:
-      id-token: write   # OIDCで必要
-      contents: read    # checkoutで必要
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -26,8 +25,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Select environment
+        id: select-env
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "STAGE=prod" >> $GITHUB_ENV
+            echo "S3_BUCKET=distribute-bucket-ky-cloudfront-bucket-quiz-distributor-prod" >> $GITHUB_ENV
+          else
+            echo "STAGE=dev" >> $GITHUB_ENV
+            echo "S3_BUCKET=distribute-bucket-ky-cloudfront-bucket-quiz-distributor-dev" >> $GITHUB_ENV
+          fi
+
       - name: Build React app
-        run: npm run build
+        run: |
+          if [[ "$STAGE" == "prod" ]]; then
+            cp .env.prod .env
+          else
+            cp .env.dev .env
+          fi
+          npm run build
 
       - name: Configure AWS credentials (assume role)
         uses: aws-actions/configure-aws-credentials@v2
@@ -36,4 +52,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3
-        run: aws s3 sync dist/ s3://${{ env.S3_BUCKET }} --delete
+        run: aws s3 sync dist/ s3://$S3_BUCKET --delete
