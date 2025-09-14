@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      S3_BUCKET: "quiz-distributor"
+      S3_BUCKET: "react-distribute-bucket-ky-cloudfront-bucket-quiz-distributor"
     permissions:
       id-token: write   # OIDCで必要
       contents: read    # checkoutで必要
