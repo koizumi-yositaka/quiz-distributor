@@ -19,8 +19,12 @@ export type TAnswerQuiz = {
 }
 
 export const quizApi = {
-  getQuiz: async (quizId: string, email: string) => {
-    const response: AxiosResponse<TQuiz> = await axiosInstance.post(`/getQuiz`, { quizId, email });
+  getQuiz: async (quizId: string, email: string, accessToken: string) => {
+    const response: AxiosResponse<TQuiz> = await axiosInstance.post(`/getQuiz`, { quizId, email }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data.pageDesign;
   },
   answerQuiz: async (answerQuiz: TAnswerQuiz) => {

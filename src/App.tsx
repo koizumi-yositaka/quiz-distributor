@@ -6,9 +6,10 @@ import { Quiz } from "./pages/Quiz";
 import { Error } from "./pages/Error";
 import { NotFound } from "./pages/NotFound";
 import { Complete } from "./components/layout/Complete";
+import { AuthProvider } from "./context/AuthContextProvider";
 function App() {
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/test" element={<Test />} />
@@ -19,7 +20,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </AuthProvider>
   );
 }
 

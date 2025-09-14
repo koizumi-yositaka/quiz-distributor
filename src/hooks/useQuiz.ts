@@ -3,6 +3,8 @@ import type { TPageDesign } from "../types/componentType";
 import { quizApi, type TAnswerQuiz, type TQuizResult } from "../api/quiz/quizApi";
 import { AxiosError } from "axios";
 import { type ErrorInfo } from "../types/type";
+
+import { useAuth } from "../context/AuthContext";
 export type UseQuizResult = {
   quiz: TPageDesign[];
   isPending: boolean;
@@ -19,10 +21,9 @@ export const useQuiz = (param: UseQuizParam) => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<ErrorInfo | null>(null);
   const [quizResult, setQuizResult] = useState<TQuizResult | null>(null);
-
-
-
+  const accessToken = useAuth();  
   useEffect(() => {
+    
     const getQuiz = async () => {
       try {
         setIsPending(true);
@@ -32,7 +33,7 @@ export const useQuiz = (param: UseQuizParam) => {
           return;
         }
         setError(null);
-        const quiz = await quizApi.getQuiz(param.quizId, param.email);
+        const quiz = await quizApi.getQuiz(param.quizId, param.email, accessToken ?? "");
         setQuiz(quiz);
       } catch(error) {
         const errorInfo = error as AxiosError<ErrorInfo>;

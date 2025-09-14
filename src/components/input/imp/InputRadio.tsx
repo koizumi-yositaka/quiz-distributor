@@ -9,6 +9,7 @@ export const InputRadio: React.FC<TInputContent> = ({
   errors,
   required,
 }) => {
+  console.log(q);
   return (
     <div className="mb-4">
       <div>

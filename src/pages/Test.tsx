@@ -54,7 +54,7 @@ export const Test = () => {
   };
 
   const handleGetQuiz = async () => {
-    const quiz = await quizApi.getQuiz(quizId, email);
+    const quiz = await quizApi.getQuiz(quizId, email,"");
     setQuizResult(null);
     setPagesDesign(JSON.stringify(quiz, null, 2));
   };
@@ -102,7 +102,7 @@ export const Test = () => {
         {parseError ? (
           <p className="text-red-500">{parseError}</p>
         ) : quizResult ? (
-          <Complete result={quizResult} />
+          <Complete />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="h-full">
             <PageParser

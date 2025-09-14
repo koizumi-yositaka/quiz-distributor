@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import TextBox from "../components/input/TextBox";
 import { useNavigate } from "react-router-dom";
+import { mwlogin } from "../api/quiz/loginApi";
+import { useAuthDispatch } from "../context/AuthContext";
 export const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -10,14 +12,20 @@ export const Login = () => {
   const preEmail = searchParams.get("preEmail");
   const [email, setEmail] = useState(preEmail ?? "");
   const [quizId, setQuizId] = useState(preQuizId ?? "");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleLogin = () => {
-    if (!email || !quizId) {
-      setError("メールアドレスとパスワードを入力してください");
+  const dispatch = useAuthDispatch();
+  const handleLogin = async () => {
+    if (!email || !quizId || !password) {
+      setError("メールアドレスとQuizIDとパスワードを入力してください");
       return;
     }
     setError("");
+    const { accessToken } = await mwlogin({
+      username: email,
+      password: password,
+    });
+    dispatch?.(accessToken);
     navigate(`/quiz`, { state: { quizId, email } });
   };
 
@@ -43,6 +51,15 @@ export const Login = () => {
             onChange={(e) => setQuizId(e.target.value)}
             error={!quizId && error ? "QuizIDを入力してください" : ""}
             type="text"
+          />
+
+          <TextBox
+            label="Password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!password && error ? "パスワードを入力してください" : ""}
+            type="password"
           />
         </div>
 
