@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const END_POINT = "http://localhost:3000";
+const END_POINT = import.meta.env.VITE_AUTH_ENDPOINT;
 
 const axiosInstance = axios.create({
   baseURL: END_POINT,  // 共通のAPIエンドポイント

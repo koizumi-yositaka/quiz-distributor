@@ -1,5 +1,5 @@
 import type { TPageDesign } from "../../types/componentType";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../axiosInstanceQuiz";
 import type { AxiosResponse } from "axios";
 
 type TQuiz = {
