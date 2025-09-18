@@ -65,7 +65,7 @@ export const Test = () => {
       quizId: quizId,
       answer: data,
     };
-    const result = await quizApi.answerQuiz(answerQuiz);
+    const result = await quizApi.answerQuiz(answerQuiz,"");
     setQuizResult(result);
   };
   return (

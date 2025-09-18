@@ -27,8 +27,14 @@ export const quizApi = {
     });
     return response.data.pageDesign;
   },
-  answerQuiz: async (answerQuiz: TAnswerQuiz) => {
-    const response: AxiosResponse<TQuizResult> = await axiosInstance.post(`/quiz/answer`, answerQuiz);
+  answerQuiz: async (answerQuiz: TAnswerQuiz, accessToken: string) => {
+    const response: AxiosResponse<TQuizResult> = await axiosInstance.post(`/quiz/answer`, answerQuiz,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   }
 };

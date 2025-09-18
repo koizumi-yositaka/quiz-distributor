@@ -58,7 +58,7 @@ export const useQuiz = (param: UseQuizParam) => {
   const answerQuiz = useCallback(async (answer: TAnswerQuiz) => {
     try {
       setIsPending(true);
-      const result = await quizApi.answerQuiz(answer);
+      const result = await quizApi.answerQuiz(answer,accessToken??"");
       setQuizResult(result);
       return result;
     } catch (error) {
