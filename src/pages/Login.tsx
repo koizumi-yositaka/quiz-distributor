@@ -21,11 +21,11 @@ export const Login = () => {
       return;
     }
     setError("");
-    const { accessToken } = await mwlogin({
+    const { idToken } = await mwlogin({
       username: email,
       password: password,
     });
-    dispatch?.(accessToken);
+    dispatch?.(idToken);
     navigate(`/quiz`, { state: { quizId, email } });
   };
 
