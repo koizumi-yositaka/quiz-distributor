@@ -28,7 +28,7 @@ export const quizApi = {
     return response.data.pageDesign;
   },
   answerQuiz: async (answerQuiz: TAnswerQuiz, accessToken: string) => {
-    const response: AxiosResponse<TQuizResult> = await axiosInstance.post(`/quiz/answer`, answerQuiz,
+    const response: AxiosResponse<TQuizResult> = await axiosInstance.post(`/answerQuiz`, answerQuiz,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { loadingInterceptor } from './interceptors/loadingInterceptor';
 
 const END_POINT = import.meta.env.VITE_AUTH_ENDPOINT;
 
@@ -14,10 +15,12 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     console.log(`[Request] ${config.method?.toUpperCase()} ${config.url}`);
+    loadingInterceptor.increment();
     return config;
   },
   (error) => {
     console.error('[Request Error]', error);
+    loadingInterceptor.decrement();
     return Promise.reject(error);
   }
 );
@@ -26,10 +29,12 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log(`[Response] ${response.status} ${response.config.url}`);
+    loadingInterceptor.decrement();
     return response;
   },
   (error) => {
     console.error('[Response Error]', error.response ? error.response.data : error);
+    loadingInterceptor.decrement();
     return Promise.reject(error);
   }
 );

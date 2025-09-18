@@ -7,20 +7,25 @@ import { Error } from "./pages/Error";
 import { NotFound } from "./pages/NotFound";
 import { Complete } from "./components/layout/Complete";
 import { AuthProvider } from "./context/AuthContextProvider";
+import { LoadingProvider } from "./context/LoadingContext";
+import { LoadingOverlay } from "./components/layout/LoadingOverlay";
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/test" element={<Test />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/error" element={<Error />} />
-          <Route path="/complete" element={<Complete />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <LoadingProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/test" element={<Test />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/error" element={<Error />} />
+            <Route path="/complete" element={<Complete />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <LoadingOverlay />
+        </BrowserRouter>
+      </AuthProvider>
+    </LoadingProvider>
   );
 }
 
