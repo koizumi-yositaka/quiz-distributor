@@ -18,7 +18,6 @@ export type UseQuizParam = {
 export const useQuiz = (param: UseQuizParam) => {
 
   const [quiz, setQuiz] = useState<TPageDesign[]>([]);
-  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<ErrorInfo | null>(null);
   const [quizResult, setQuizResult] = useState<TQuizResult | null>(null);
   const accessToken = useAuth();  
@@ -26,7 +25,6 @@ export const useQuiz = (param: UseQuizParam) => {
     
     const getQuiz = async () => {
       try {
-        setIsPending(true);
         if(!param.quizId || !param.email) {
           setError(null);
           setQuiz([]);
@@ -47,9 +45,7 @@ export const useQuiz = (param: UseQuizParam) => {
               status: errorInfo.status ?? 500 
             }
         );
-      } finally {
-        setIsPending(false);
-      }
+      } 
     };
     getQuiz();
   }, [param.quizId, param.email]);
@@ -57,7 +53,6 @@ export const useQuiz = (param: UseQuizParam) => {
 
   const answerQuiz = useCallback(async (answer: TAnswerQuiz) => {
     try {
-      setIsPending(true);
       const result = await quizApi.answerQuiz(answer,accessToken??"");
       setQuizResult(result);
       return result;
@@ -72,10 +67,8 @@ export const useQuiz = (param: UseQuizParam) => {
             status: errorInfo.status ?? 500 
           }
       );
-    } finally {
-      setIsPending(false);
-    }
+    } 
   }, []);
   
-  return { quiz, isPending, quizResult, answerQuiz, error };
+  return { quiz, quizResult, answerQuiz, error };
 };

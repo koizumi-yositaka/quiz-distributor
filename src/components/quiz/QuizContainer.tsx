@@ -9,7 +9,7 @@ export const QuizContainer = ({
   quizId: string;
   email: string;
 }) => {
-  const { quiz, isPending, error, answerQuiz, quizResult } = useQuiz({
+  const { quiz, error, answerQuiz, quizResult } = useQuiz({
     quizId,
     email,
   });
@@ -24,10 +24,6 @@ export const QuizContainer = ({
     await answerQuiz(answerQuizParams);
     navigate(`/complete`, { state: { quizResult } });
   };
-
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
   if (error) {
     navigate(`/error`, { state: { error } });
   }
