@@ -1,5 +1,4 @@
-import { useState } from "react";
-import type { TPage, TPageDesign } from "../../types/componentType";
+import type { TPageDesign } from "../../types/componentType";
 import { useForm } from "react-hook-form";
 import { parsePageDesign } from "../../common/parseCommon";
 import { PageParser } from "../PageParser";
