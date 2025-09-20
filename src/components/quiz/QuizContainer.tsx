@@ -9,10 +9,11 @@ export const QuizContainer = ({
   quizId: string;
   email: string;
 }) => {
-  const { quiz, error, answerQuiz, quizResult } = useQuiz({
+  const { quiz, error, answerQuiz } = useQuiz({
     quizId,
     email,
   });
+  console.log(quiz); // ここでquizが取得できているか確認
   const navigate = useNavigate();
 
   const onSubmit = async (data: Record<string, string>) => {
@@ -21,12 +22,13 @@ export const QuizContainer = ({
       quizId: quizId,
       answer: data,
     };
-    await answerQuiz(answerQuizParams);
+    const quizResult = await answerQuiz(answerQuizParams);
     navigate(`/complete`, { state: { quizResult } });
   };
   if (error) {
     navigate(`/error`, { state: { error } });
   }
+  
   return (
     <>
       <QuizPresentation pageDesign={quiz} onSubmit={onSubmit} />

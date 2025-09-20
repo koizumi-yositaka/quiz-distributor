@@ -16,15 +16,15 @@ export const QuizPresentation = ({
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onChange",
+    mode: "onSubmit",
   });
-  const [pages] = useState<TPage[]>(
-    parsePageDesign(pageDesign, register, errors)
-  );
+  const parsedPageDesign = parsePageDesign(pageDesign, register, errors);
+  console.log("parsedPageDesign",parsedPageDesign); // ここでparsedPageDesignが取得できているか確認
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="h-full">
       <PageParser
-        pages={pages}
+        pages={parsedPageDesign}
         isValid={isValid}
         submitButton={
           <button

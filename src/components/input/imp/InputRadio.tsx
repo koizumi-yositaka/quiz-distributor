@@ -13,8 +13,8 @@ export const InputRadio: React.FC<TInputContent> = ({
   return (
     <div className="mb-4">
       <div>
-        {options.map((option: TRadioOption) => (
-          <div className="flex items-center space-x-2" key={option.id}>
+        {options.map((option: TRadioOption,index: number) => (
+          <div className="flex items-center space-x-2" key={option.id + index}>
             <label
               key={option.value}
               className="inline-flex items-center cursor-pointer"
